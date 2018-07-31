@@ -14,7 +14,7 @@
 #define LOW    0
 
 /*
- * add -> what you want .....
+ * REG -> what you want .....
  */
 typedef unsigned char uint8;
 typedef char int8;

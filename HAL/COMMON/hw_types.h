@@ -1,13 +1,13 @@
 /*
- * hw_types.h
- *
- *  Created on: 7/30/2018
- *      Author: Ahmed Yusri Mohammed
- */
+* hw_types.h
+*
+*  Created on: 7/30/2018
+*      Author: Ahmed Yusri Mohammed
+*/
 
 #ifndef HW_TYPES_H_
 #define HW_TYPES_H_
-
+#include "types.h"
 #define BIT0   0
 #define BIT1   1
 #define BIT2   2
@@ -17,18 +17,20 @@
 #define BIT6   6
 #define BIT7   7
 #define BIT8   8
+ 
+#define ACCESS_REG_8BIT(REG)         (*(volatile uint8*)REG)
 
-#define READ_REG_8BIT(add)  (*(volatile unsigned  char *)(add))
+#define READ_REG_8BIT(REG)           (*(volatile uint8*)(REG))
 
-#define WRITE_REG_8BIT(add , value) ( ((*(volatile unsigned char *)(add)) = (value) ))
+#define WRITE_REG_8BIT(REG,Val)      (ACCESS_REG_8BIT(REG))=(Val);
 
-#define SET_BIT(REG,BIT_NUM)   ( WRITE_REG_32BIT( REG ,(1 << BIT_NUM) | READ_REG_32BIT(REG)) )
+#define SET_BIT(REG,BIT_NUM)		 (ACCESS_REG_8BIT(REG)|=1<<(BIT_NUM))
 
-#define CLEAR_BIT(REG,BIT_NUM) ( WRITE_REG_32BIT( REG ,(~(1 << BIT_NUM)) & READ_REG_32BIT(REG)) )
+#define CLEAR_BIT(REG,BIT_NUM)       (ACCESS_REG_8BIT(REG) &=(~(1<<(BIT_NUM))))
 
-#define BIT_IS_SET(REG,BIT_NUM) ( (READ_REG_32BIT(REG) & (1 << BIT_NUM)) >>  (BIT_NUM))
+#define BIT_IS_SET(REG,BIT_NUM)      ((ACCESS_REG_8BIT(REG) & (1 << BIT_NUM)))
 
-#define BIT_IS_CLEAR(REG,BIT_NUM) ( !( (READ_REG_32BIT(REG) & (1 << BIT_NUM)) >>  (BIT_NUM) ) )
+#define BIT_IS_CLEAR(REG,BIT_NUM)    (!(BIT_IS_SET(REG,BIT_NUM)))
 
 #define TOGGLE_BIT(REG,BIT_NUM)  ( READ_REG_32BIT(REG) = READ_REG_32BIT(REG) ^ (1<<BIT_NUM) )
 /*********************************************
