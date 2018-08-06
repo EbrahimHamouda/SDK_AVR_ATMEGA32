@@ -2,8 +2,7 @@
 * HW_SPI.h
 *
 * Created: 7/30/2018 2:57:47 PM
-*  Author: ebrahim
-	Design : ahmed yusri 
+*  Author: ahmed
 */
 
 
@@ -11,6 +10,7 @@
 #define HW_SPI_H_
 
 #define SPI_BASE       0x2d
+
 //OFFEST REGS
 #define SPICONTROLREG  0x00
 #define SPISTATUSREG   0x01
@@ -28,21 +28,5 @@
 //OFFEST SATUTS BITS
 #define SPIINTERRUPTFLAG    7
 #define SPIWRITCOLLFLAG     6
+
 #endif /* HW_SPI_H_ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

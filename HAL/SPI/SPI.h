@@ -36,6 +36,7 @@ typedef enum
 	SPI_FALLING_EDGE
 } Spi_ClockPolarityType;
 
+
 typedef enum
 {
 	SPI_SAMPLE,
@@ -52,7 +53,7 @@ typedef enum
 
 typedef struct
 {
-	Spi_InterruptType		Interrup;
+	Spi_InterruptType		Interrupt;
 	Spi_DataOrderType		DataOrder;
 	Spi_ModeSelectType		ModeSelect;  
 	Spi_ClockPolarityType   ClockPolarity;
@@ -62,9 +63,9 @@ typedef struct
 
 void spi_init(Spi_Config* ptr);
 
-uint8 spi_master(uint8 data);
+uint8 spi_ExchangeData(uint8 data);
 
-uint8 spi_slave(uint8 data);
+void spi_MasterInterruptEnable(void(*ptr_CallBackFun)());
 
 
 #endif /* SPI_H_ */
