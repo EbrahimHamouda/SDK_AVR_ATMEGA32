@@ -1,44 +1,28 @@
 /*
- * USART.h
- *
- *  Created on: Aug 1, 2018
- *      Author: mh-sh
- */
+* USART.h
+*
+*  Created on: Aug 1, 2018
+*      Author: mh-sh
+*/
 
 #ifndef HAL_UART_USART_H_
 #define HAL_UART_USART_H_
 
-#include "../../Common.h"
-#include "../iom32.h"
+#include "hw_types.h"
+#include "HW_UART.h"
 
-#define UART_Sysclk 40000000UL
+#define F_CPU 1000000UL
+/* Functions
+*/
 
-typedef enum {
-	UART0, UART1,
+void  Uart_init();  //BAUD RANGE 2400
 
-} UART_NUM_t;
+uint8 Uart_ReadByte();
 
-typedef enum { /// changed order
-	NO_ERROR,
-	Overrun_Error,
-	Break_Error,
-	Parity_Error,
-	Framing_Error,
-	Receive_Timeout,
-} UARTError_t;
+void  Uart_SendByte(uint8 Chr);
 
-typedef enum {
-	RX_BUFFER, TX_BUFFER,
-} UART_BUFFER_t;
+void  Uart_TxInterruptEnable(void (*ptr)());
 
-/* *   */
-
-void UART_init(UART_NUM_t UART, u16 baudRate);
-UARTError_t UART_getError(UART_NUM_t UART);
-char UART_readByte(UART_NUM_t UART);
-void UART_sendByte(UART_NUM_t UART, char Chr);
-void UART_sendString(UART_NUM_t UART, char *String);
-void UART_sendPacket(UART_NUM_t UART, char A[], u8 N);
-u8 UART_dataReady(UART_NUM_t UART);
+void  Uart_RxInterruptEnable(void (*ptr)());
 
 #endif /* HAL_UART_USART_H_ */

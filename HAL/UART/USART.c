@@ -1,70 +1,56 @@
 /*
- * USART.c
- *
- *  Created on: Aug 1, 2018
- *      Author: mh-sh
- */
+* USART.c
+*
+*  Created on: Aug 5, 2018
+*      Author: ebrahim
+*/
 
 #include "USART.h"
+#include "avr/interrupt.h"
 
-void UART_init(UART_NUM_t UART, u16 baudRate) {
-	UBRRH = (unsigned char) (baudRate >> 8);
-	UBRRL = (unsigned char) baudRate;
+static void (*ptr_CallBackfnUartTx)();
+static void (*ptr_CallBackfnUartRx)();
 
-	UCSRB = (1 << RXEN) | (1 << TXEN);
 
-	UCSRC &= ~(1 << UMSEL);
-	//2stop , odd parity , 8bit data
-	UCSRC = (1 << URSEL) | (3 << UPM0) | (1 << USBS) | (3 << UCSZ0);
 
+ISR(USART_UDRE_vect)
+{
+	ptr_CallBackfnUartTx();
 }
-UARTError_t UART_getError(UART_NUM_t UART) {
-	UARTError_t ret_error = NO_ERROR;
-	if (UCSRA & ((1 << FE) | (1 << DOR) | (1 << PE))) {
-		if (UCSRA & (1 << FE)) {
-			ret_error = Framing_Error;
-		} else if (UCSRA & (1 << DOR)) {
-			ret_error = Overrun_Error;
-		} else if (UCSRA & (1 << PE)) {
-			ret_error = Parity_Error;
-		}
-	}
 
-	return ret_error;
-
+ISR(USART_RXC_vect)
+{
+	ptr_CallBackfnUartRx();
 }
-char UART_readByte(UART_NUM_t UART) { //Blocking
 
-	while (!(UCSRA & (1 << RXC)))
-		;
-	return UDR;
-
+void Uart_init()  
+{
+	ACCESS_REG_8BIT((UARTBITREGLOW+UART_BASE)) = 25;								     // baud rate setting 
+	ACCESS_REG_8BIT((UARTCONTROLB+UART_BASE)) |= (1 << RXEN) | (1 << TXEN);			 // wake up uart for recieve and transmit 
+	ACCESS_REG_8BIT((UARTCONTROLC+UART_BASE)) |= (1<<URSEL) |  (3 << UCSZ0);		 //1stop , no parity , 8bit data  >> fram format 
 }
-void UART_sendByte(UART_NUM_t UART, char Chr) { //Blocking
-	while (!(UCSRA & (1 << UDRE)))
-		;
+
+void Uart_SendByte(uint8 Chr)
+{
+	while (!(ACCESS_REG_8BIT((UARTCONTROLA+UART_BASE)) & (1 << UDRE)));		// checking if there's still data in Buffer
 	UDR = Chr;
 }
-void UART_sendString(UART_NUM_t UART, char *String) {
-	u8 i = 0;
-	while (String[i] != '\0') {
-		UART_sendByte(UART, String[i++]);
-	}
+
+uint8 Uart_ReadByte()
+{
+	while (!(ACCESS_REG_8BIT((UARTCONTROLA+UART_BASE)) & (1 << RXC)));       // checking is that recieve completed
+	return UDR;
 }
 
-void UART_sendPacket(UART_NUM_t UART, char A[], u8 N) {
-	u8 i = 0;
-	while (i < N) {
-		UART_sendByte(UART, A[i++]);
-	}
-
-}
-u8 UART_dataReady(UART_NUM_t UART) {
-	return (UCSRA & (1 << RXC));
+void Uart_TxInterruptEnable(void (*ptr)())
+{
+	ptr_CallBackfnUartTx=ptr;           // assign ptr to call back fun
+	ACCESS_REG_8BIT((UARTCONTROLB+UART_BASE)) |= 1<<UDRIE;                  // enable interrupt when buffer is empty
 }
 
-void UART_Flush(void) {
-	unsigned char dummy;
-	while (UCSRA & (1 << RXC))
-		dummy = UDR;
+void  Uart_RxInterruptEnable(void (*ptr)())
+{
+	ptr_CallBackfnUartRx = ptr;         // assign ptr to call back fun
+	ACCESS_REG_8BIT((UARTCONTROLB+UART_BASE)) |= 1<<RXCIE;                  // enable interrupt when data recieved 
 }
+

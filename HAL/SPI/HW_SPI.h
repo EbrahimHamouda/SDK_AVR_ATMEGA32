@@ -2,7 +2,8 @@
 * HW_SPI.h
 *
 * Created: 7/30/2018 2:57:47 PM
-*  Author: ahmed
+*  Author: ebrahim
+	Design : ahmed yusri 
 */
 
 
@@ -28,3 +29,20 @@
 #define SPIINTERRUPTFLAG    7
 #define SPIWRITCOLLFLAG     6
 #endif /* HW_SPI_H_ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
