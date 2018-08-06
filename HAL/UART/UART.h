@@ -9,10 +9,11 @@
 #define HAL_UART_USART_H_
 //todo add intr
 #include "../../Common.h"
+#include "math.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define UART_Sysclk 40000000UL
+//#define UART_Sysclk 40000000UL
 
 typedef enum {
 	UART0, UART1,
