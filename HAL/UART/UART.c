@@ -6,7 +6,7 @@
  */
 
 #include "USART.h"
-#include <avr/io.h>
+#include <avr/io.h> //todo remove this
 
 void (*ISR_USART_RXC)(), (*ISR_USART_TXC)();
 
@@ -32,12 +32,15 @@ void UART_addISR(UART_NUM_t UART, UART_INTERRUPT_t ISR_type, void (*ISR)()) {
 }
 
 void UART_init(UART_NUM_t UART, u16 baudRate) {
-	UBRRH = (unsigned char) (baudRate >> 8);
-	UBRRL = (unsigned char) baudRate;
+	//calc baudRate
+	u16 temp = round((ECU_FREQ / (16 * baudRate)) - 1);
+
+	UBRRH = (u8) (temp >> 8);
+	UBRRL = (u8) temp;
 
 	UCSRB |= (1 << RXEN) | (1 << TXEN);
 
-	UCSRC &= ~(1 << UMSEL);
+	UCSRC &= ~(1 << UMSEL); //enable reg
 	//2stop , odd parity , 8bit data
 	UCSRC |= (1 << URSEL) | (3 << UPM0) | (1 << USBS) | (3 << UCSZ0);
 
