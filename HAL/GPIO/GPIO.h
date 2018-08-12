@@ -8,10 +8,8 @@
 #ifndef HAL_GPIO_H_
 #define HAL_GPIO_H_
 
+#include "ebra_common.h"
 #include "hw_gpio.h"
-#include "hw_types.h"
-/*#include "Port_Cfg.h"*/
-
 
 typedef uint8 Port_PinType;
 typedef uint8 PortType;
@@ -52,5 +50,7 @@ Port_PinLevelType digitalRead(Port_PinType Pin);
 void Port_Write(PortType port,Port_ValType Val);
 
 Port_ValType Port_Read(PortType port);
+
+void BunchPins_Write(uint8* arr,uint8 N,Port_PinLevelType type);
 
 #endif /* HAL_GPIO_H_ */
