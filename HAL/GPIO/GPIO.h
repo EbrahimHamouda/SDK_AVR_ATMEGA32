@@ -2,7 +2,7 @@
  * GPIO.h
  *
  *  Created on: 7/30/2018
- *      Author: Ahmed Yusri Mohammed
+ *      Author: EbrahimHamouda
  */
 
 #ifndef HAL_GPIO_H_
