@@ -1,39 +1,33 @@
 /*
  * I2C.h
  *
- * Created: 7/30/2018 3:00:02 PM
- *  Author: ebrahim 
+ * Created: 3/12/2014 12:05:49 PM
+ *  Author: Hossam Adel
  */ 
 
 
 #ifndef I2C_H_
 #define I2C_H_
 
-#define I2C_WakeUp       	 SET_BIT((I2C_BASE+I2CCONTROL),I2CENABLEBIT)
-#define I2C_START_EN     	 SET_BIT((I2C_BASE+I2CCONTROL),I2CSTARTBIT)
-#define I2C_RESTART_EN	 	 SET_BIT((I2C_BASE+I2CCONTROL),I2CSTARTBIT)
-#define I2C_STOP_EN		 	 SET_BIT((I2C_BASE+I2CCONTROL),I2CSTOPBIT)
-#define I2C_ACK_SET  		 SET_BIT((I2C_BASE+I2CCONTROL),I2CACKBIT)
-#define I2C_INTERRUPT_EN     SET_BIT((I2C_BASE+I2CCONTROL),I2CENABLEINT)
-#define I2C_IDLE  			 BIT_IS_SET((I2C_BASE+I2CCONTROL),I2CFLAGE)
-#define GenericBrodcast 	 0x00
+#include<avr/io.h>
 
 
-void i2c_init();
+#define TW_START         0x08 // start has been sent
+#define TW_REP_START     0x10 // repeated start 
+#define TW_MT_SLA_W_ACK  0x18 // ( slave address + Write have been sent ) + Ack received from slave
+#define TW_MT_SLA_R_ACK  0x40 // ( slave address + Read have been sent ) + Ack received from slave
+#define TW_MT_DATA_ACK   0x28 // Data byte has been transmitted and ACK has been received from Slave.
+#define TW_MR_DATA_ACK   0x50 // Master received data and send ACK
+#define TW_MR_DATA_NACK  0x58 // MAster received data but don't send ACK
 
-void i2c_MasterTx(uint16 Slave_Addrass,uint8 Data);
 
-void i2c_MasterRx(uint16 Slave_Addrass,uint8* Data);
+void I2C_Init(void);
+void I2C_Start(void);
+void I2C_Stop(void);
+void I2C_Write(unsigned char data);
+unsigned char I2C_ReadWithACK(void); //read with send Ack
+unsigned char I2C_ReadWithNACK(void); //read without send Ack
+unsigned char I2C_GetStatus(void);
 
-void i2c_SlaveTx();
-
-void i2c_SlaveRx();
 
 #endif /* I2C_H_ */
-
-
-// i2c is AND gate >>  if( 2master>> init data ) THEN 10v 
-/*/
-
-*bus arbatriation check 
-*/
