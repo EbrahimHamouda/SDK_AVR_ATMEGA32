@@ -2,14 +2,15 @@
  * GPIO.h
  *
  *  Created on: 7/30/2018
- *      Author: EbrahimHamouda
+ *      Author: Ahmed Yusri Mohammed
  */
 
 #ifndef HAL_GPIO_H_
 #define HAL_GPIO_H_
 
-#include "ebra_common.h"
 #include "hw_gpio.h"
+#include <common/ebra_common.h>
+
 
 typedef uint8 Port_PinType;
 typedef uint8 PortType;
@@ -51,6 +52,8 @@ void Port_Write(PortType port,Port_ValType Val);
 
 Port_ValType Port_Read(PortType port);
 
-void BunchPins_Write(uint8* arr,uint8 N,Port_PinLevelType type);
+void gpio_spi_cng_master();
+void gpio_spi_cng_slave();
+void gpio_uart_cng();
 
 #endif /* HAL_GPIO_H_ */

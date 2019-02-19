@@ -2,7 +2,7 @@
  * HW_I2C.h
  *
  * Created: 7/30/2018 2:58:11 PM
- *  Author: ahmed
+ *  Author: ebrahim hamouda
  */ 
 
 

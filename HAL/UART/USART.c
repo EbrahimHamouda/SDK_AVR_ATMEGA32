@@ -5,11 +5,11 @@
 *      Author: ebrahim
 */
 
-#include "USART.h"
-#include "avr/interrupt.h"
+#include "C:\Users\ebrah\Desktop\test_comm-stack0\comm_stack\channels\uart\USART.h"
+#include <avr/interrupt.h>
 
 static void (*ptr_CallBackfnUartTx)();
-static void (*ptr_CallBackfnUartRx)();
+static void (*ptr_CallBackfnUartRx)(uint8);
 
 
 
@@ -20,7 +20,7 @@ ISR(USART_UDRE_vect)
 
 ISR(USART_RXC_vect)
 {
-	ptr_CallBackfnUartRx();
+	ptr_CallBackfnUartRx(ACCESS_REG_8BIT((UARTDATAREG +UART_BASE)));
 }
 
 void Uart_init()  
@@ -48,9 +48,13 @@ void Uart_TxInterruptEnable(void (*ptr)())
 	ACCESS_REG_8BIT((UARTCONTROLB+UART_BASE)) |= 1<<UDRIE;                  // enable interrupt when buffer is empty
 }
 
-void  Uart_RxInterruptEnable(void (*ptr)())
+void  Uart_RxInterruptEnable(void (*ptr)(uint8))
 {
 	ptr_CallBackfnUartRx = ptr;         // assign ptr to call back fun
 	ACCESS_REG_8BIT((UARTCONTROLB+UART_BASE)) |= 1<<RXCIE;                  // enable interrupt when data recieved 
 }
 
+void Uart_TxinterruptDisable()
+{
+	(ACCESS_REG_8BIT((UARTCONTROLB+UART_BASE))) &= ~(1<<UDRIE); 
+}

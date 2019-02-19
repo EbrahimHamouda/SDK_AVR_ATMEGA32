@@ -8,7 +8,7 @@
 #ifndef HAL_UART_USART_H_
 #define HAL_UART_USART_H_
 
-#include "hw_types.h"
+#include <common\ebra_common.h>
 #include "HW_UART.h"
 
 #define F_CPU 1000000UL
@@ -23,6 +23,8 @@ void  Uart_SendByte(uint8 Chr);
 
 void  Uart_TxInterruptEnable(void (*ptr)());
 
-void  Uart_RxInterruptEnable(void (*ptr)());
+void  Uart_RxInterruptEnable(void (*ptr)(uint8));
+
+void Uart_TxinterruptDisable();
 
 #endif /* HAL_UART_USART_H_ */

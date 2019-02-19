@@ -9,7 +9,7 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-#include "hw_types.h"
+#include <common\ebra_common.h>
 #include "HW_SPI.h"
 
 typedef enum
@@ -65,7 +65,13 @@ void spi_init(Spi_Config* ptr);
 
 uint8 spi_ExchangeData(uint8 data);
 
-void spi_MasterInterruptEnable(void(*ptr_CallBackFun)());
+uint8 spi_Rx();
 
+void spi_Tx(uint8 data);
+
+void Spi_AssignCallBack(void(*ptr_CallBackFun)(uint8));
+
+void spi_InterruptDisable();
 
 #endif /* SPI_H_ */
+

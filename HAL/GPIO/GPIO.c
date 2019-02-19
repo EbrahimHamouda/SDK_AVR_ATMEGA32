@@ -1,7 +1,7 @@
 /*
 * GPIO.c
 *
-* Created:
+* Created: 
 *   Author: EbrahimHamouda
 */
 
@@ -58,12 +58,12 @@ void SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction)
 	}
 	else
 	{
-		//error
+	 //error	
 	}
 }
 void SetPortDirection(PortType port,Port_ValType Val)
 {
-	WRITE_REG_8BIT((port+GPIODIR),Val);
+	WRITE_REG_8BIT((port+GPIODIR),Val); 
 }
 void digitalWrite(Port_PinType Pin,Port_PinLevelType Val)
 {
@@ -171,26 +171,36 @@ Port_PinLevelType digitalRead(Port_PinType Pin)
 	}
 	else
 	{
-		//error
+	 //error	
 	}
 	return ret_val;
 }
-
 void Port_Write(PortType port,Port_ValType Val)
 {
 	WRITE_REG_8BIT((port+GPIOOUTDATA),Val);
 }
-
 Port_ValType Port_Read(PortType port)
 {
-	return READ_REG_8BIT((port+GPIOINDATA));
+	return READ_REG_8BIT((port+GPIOINDATA));	
 }
 
-void BunchPins_Write(uint8* arr,uint8 N,Port_PinLevelType type)
+void gpio_spi_cng_master()
 {
-	uint8 i;
-	for (i=0;i<N;i++)
-	{
-		digitalWrite(arr[i],type);
-	}
+	SetPinDirection(B4,PORT_PIN_OUT);    //SS
+	SetPinDirection(B5,PORT_PIN_OUT);    //MOSi
+	SetPinDirection(B6,PORT_PIN_IN);	 //MISO
+	SetPinDirection(B7,PORT_PIN_OUT);	 //SCK
+}
+
+void gpio_spi_cng_slave()
+{
+	SetPinDirection(B4,PORT_PIN_IN);	 //SS
+	SetPinDirection(B5,PORT_PIN_IN);	 //MOSI
+	SetPinDirection(B6,PORT_PIN_OUT);    //MISO
+	SetPinDirection(B7,PORT_PIN_IN);     //SCK
+}
+void gpio_uart_cng()
+{
+	SetPinDirection(D0,PORT_PIN_IN); // uart RX
+	SetPinDirection(D1,PORT_PIN_OUT); // uart TX
 }
