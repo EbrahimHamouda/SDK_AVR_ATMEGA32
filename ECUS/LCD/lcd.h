@@ -8,18 +8,29 @@
 
 #ifndef LCD_H
 #define	LCD_H
-#include "ebra_common.h"
-#include "GPIO.h"
+#include <common/ebra_common.h>
+#include "F:\embedded\Work_space\2_Drivers_atmega32\SDK_AVR_ATMEGA32\HAL\GPIO\GPIO.h"
+#include "LCD_cnfg.h"
 
-#define _4BIT_MODE
-#define DATA_PINS 4
+#ifdef _4BIT_MODE
+	#define DATA_PINS 4
+#else
+	#define DATA_PINS 8
+#endif // _DEBUG
 
+/*
+* notes 
+* this file don't touch it don't configure any thing here 
+* the configuration struct must be saved in the app layer and don't change it  
+* every single API shall use your config it must be const all the run time 
+
+*/
 typedef struct
 {
-	uint8 arr_DataPins[DATA_PINS];
-	uint8 Enable_pin;
-	uint8 Reg_Select;
-} Lcd_PinsCfgType;
+	uint8 arr_DataPins[DATA_PINS]; // put the num of the pin for data
+	uint8 Enable_pin;			   // put the num of the enable bit
+	uint8 Reg_Select;			   // put the num of the RS bit 
+} struct_PinsCnfg_t;
 
 /*commands*/
 #define ENTRY_MODE   0x06
@@ -31,12 +42,18 @@ typedef struct
 #define CURSOR_OFF   0x0c
 #define DISPLAY_OFF  0x08
 
-void lcd_init(Lcd_PinsCfgType* ptr);
-void lcd_cmd(Lcd_PinsCfgType* ptr,uint8 cmd);
-void lcd_chr(Lcd_PinsCfgType* ptr,uint8 chr);
-void lcd_clear(Lcd_PinsCfgType* ptr);
-void lcd_goto(Lcd_PinsCfgType* ptr,uint8 row, uint8 col);
-void lcd_str(Lcd_PinsCfgType* ptr_lcd,uint8* ptr_chr);
+// to init the lcd sent the confg struct and wait 
+void lcd_init(const struct_PinsCnfg_t* ptr);
+// if u like to change the optional config in run time 
+void lcd_cmd(const struct_PinsCnfg_t* ptr,uint8 cmd);
+// to sent char to displaied
+void lcd_chr(const struct_PinsCnfg_t* ptr,uint8 chr);
+// to clear the lcd
+void lcd_clear(const struct_PinsCnfg_t* ptr);
+// to set cursor poisition 
+void lcd_goto(const struct_PinsCnfg_t* ptr,uint8 row, uint8 col);
+//to sent whole string
+void lcd_str(const struct_PinsCnfg_t* ptr_lcd,uint8 row, uint8 col,uint8* ptr_chr);
 
 #endif	/* LCD_H */
 

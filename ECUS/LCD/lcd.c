@@ -8,60 +8,72 @@
 #include "lcd.h"
 #define  F_CPU 1000000UL
 #include <util/delay.h>
-#include "GPIO.h"
 
 #define EN        ptr->Enable_pin
 #define RS        ptr->Reg_Select
 
-static void kick(Lcd_PinsCfgType* ptr,uint8 chr)
+static void kick(const struct_PinsCnfg_t* ptr,uint8 chr)
 {
+	/*
+	* assign data in the pins of the confg
+	* make pulse to make lcd work
+	*/
 	uint8 i;
 	for (i=0;i<DATA_PINS;i++)
 	{
 		if (chr & (1<<i))
 		{
-			digitalWrite(ptr->arr_DataPins[i],PORT_PIN_LEVEL_HIGH);
+			digitalWrite(ptr->arr_DataPins[i],SET_VALUE_HIGH);
 		}
 		else
 		{
-			digitalWrite(ptr->arr_DataPins[i],PORT_PIN_LEVEL_LOW);
+			digitalWrite(ptr->arr_DataPins[i],SET_VALUE_LOW);
 		}
 	}
-	digitalWrite(EN,PORT_PIN_LEVEL_LOW);
-	_delay_ms(30);
-	digitalWrite(EN,PORT_PIN_LEVEL_HIGH);
+	
+	digitalWrite(EN,SET_VALUE_LOW);
+	_delay_ms(1);
+	digitalWrite(EN,SET_VALUE_HIGH);
 }
 
-void lcd_init(Lcd_PinsCfgType* ptr)
+void lcd_init(const struct_PinsCnfg_t* ptr)
 {
+	/*
+	* set dirction output for data and control pins
+	* config the lcd to start working
+	*/
 	uint8 i;
-	for(i=0;i<DATA_PINS;i++)                                 // set dirction output for data and control
+	for(i=0;i<DATA_PINS;i++)
 	{
-		SetPinDirection(ptr->arr_DataPins[i],PORT_PIN_OUT);
+		SetPinDirection(ptr->arr_DataPins[i],SET_PIN_OUT);
 	}
-	SetPinDirection(RS,PORT_PIN_OUT);                       
-	SetPinDirection(EN,PORT_PIN_OUT);
+	SetPinDirection(RS,SET_PIN_OUT);
+	SetPinDirection(EN,SET_PIN_OUT);
 	
 	#ifdef _4BIT_MODE
-	lcd_cmd(ptr,0x02);										//config lcd mode send commands to 
-	lcd_cmd(ptr,BIT_4);										 				
+	lcd_cmd(ptr,0x02);						//config lcd mode send commands to
+	lcd_cmd(ptr,BIT_4);
 	#endif
 	
 	#ifdef _8BIT_MODE
 	lcd_cmd(ptr,BIT_8);
 	#endif
 	
-	lcd_cmd(ptr,ENTRY_MODE);                          // init lcd to use 
+	lcd_cmd(ptr,ENTRY_MODE);                          // init lcd to use
 	lcd_goto(ptr,0, 0);
 	lcd_cmd(ptr,CURSOR_BLINK);
 	lcd_clear(ptr);
 }
 
-void lcd_cmd(Lcd_PinsCfgType* ptr,uint8 cmd)
+void lcd_cmd(const struct_PinsCnfg_t* ptr,uint8 cmd)
 {
-	digitalWrite(RS,PORT_PIN_LEVEL_LOW);    // register select command 
+	/*
+	* select the register "command || data " in this case command
+	* sent the command
+	*/
+	digitalWrite(RS,SET_VALUE_LOW);    // register select command
 	
-	#ifdef _8BIT_MODE           
+	#ifdef _8BIT_MODE
 	kick(ptr,cmd);
 	#endif
 
@@ -72,9 +84,13 @@ void lcd_cmd(Lcd_PinsCfgType* ptr,uint8 cmd)
 	_delay_ms(50);
 }
 
-void lcd_chr(Lcd_PinsCfgType* ptr,uint8 chr) 
-{	
-	digitalWrite(RS,PORT_PIN_LEVEL_HIGH);              // register select data
+void lcd_chr(const struct_PinsCnfg_t* ptr,uint8 chr)
+{
+	/*
+	* select the register "command || data " in this case data
+	* sent the data
+	*/
+	digitalWrite(RS,SET_VALUE_HIGH);              // register select data
 	
 	#ifdef _8BIT_MODE
 	kick(ptr,chr);
@@ -87,27 +103,52 @@ void lcd_chr(Lcd_PinsCfgType* ptr,uint8 chr)
 	_delay_ms(50);
 }
 
-void lcd_clear(Lcd_PinsCfgType* ptr)
+void lcd_clear(const struct_PinsCnfg_t* ptr)
 {
-	lcd_cmd(ptr,CLEAR_SCREEN);
+	lcd_cmd(ptr,CLEAR_SCREEN); // do the same as a command
 }
 
-void lcd_goto(Lcd_PinsCfgType* ptr,uint8 row, uint8 col) 
+void lcd_goto(const struct_PinsCnfg_t* ptr,uint8 row, uint8 col)
 {
-	if (row == 0) 
+	if (row == 0)
 	{
 		lcd_cmd(ptr,(unsigned) 0x80 | col);
-	} else if (row == 1) 
+	}
+	else if (row == 1)
 	{
 		lcd_cmd(ptr,(unsigned) 0xc0 | col);
 	}
+	#ifdef _LCD_16_4_
+	else if (row==2)
+	{
+		lcd_cmd(ptr,(unsigned) 0x90  | col);
+	}
+	else if (row==3)
+	{
+		lcd_cmd(ptr,(unsigned) 0xD0 | col);
+	}
+	#endif // _LCD_16_4_
+	else
+	{
+		// should never be here
+	}
 }
 
-void lcd_str(Lcd_PinsCfgType* ptr_lcd,uint8* ptr_chr)
+void lcd_str(const struct_PinsCnfg_t* ptr_lcd,uint8 row, uint8 col,uint8* ptr_chr)
 {
+	lcd_goto(ptr_lcd,row,col);
 	while (*ptr_chr != '\0')
 	{
+		if (*ptr_chr == '*') // so i can't put * inside string to be shown in lcd
+		{
+			lcd_goto(ptr_lcd,++row,0);
+			ptr_chr++;
+			continue;
+		}
 		lcd_chr(ptr_lcd,*ptr_chr);
 		ptr_chr++;
 	}
 }
+
+
+

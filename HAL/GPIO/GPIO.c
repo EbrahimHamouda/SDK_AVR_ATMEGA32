@@ -7,11 +7,11 @@
 
 #include "GPIO.h"
 
-void SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction)
+void SetPinDirection(enum_PinsNum_t Pin,enum_PinDirection_t Direction)
 {
 	if(Pin<8)                  //PORTA
 	{
-		if (Direction==PORT_PIN_IN)
+		if (Direction==SET_PIN_IN)
 		{
 			CLEAR_BIT((BASE_A+GPIODIR),(Pin));
 		}
@@ -23,7 +23,7 @@ void SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction)
 	else if((Pin<16)&&(Pin>=8)) //PORTB
 	{
 		Pin-=8;
-		if (Direction==PORT_PIN_IN)
+		if (Direction==SET_PIN_IN)
 		{
 			CLEAR_BIT((BASE_B+GPIODIR),(Pin));
 		}
@@ -35,7 +35,7 @@ void SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction)
 	else if ((Pin<24)&&(Pin>=16)) //PORTC
 	{
 		Pin-=16;
-		if (Direction==PORT_PIN_IN)
+		if (Direction==SET_PIN_IN)
 		{
 			CLEAR_BIT((BASE_C+GPIODIR),(Pin));
 		}
@@ -47,7 +47,7 @@ void SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction)
 	else if ((Pin<32)&&(Pin>=24)) //PORTD
 	{
 		Pin-=24;
-		if (Direction==PORT_PIN_IN)
+		if (Direction==SET_PIN_IN)
 		{
 			CLEAR_BIT((BASE_D+GPIODIR),(Pin));
 		}
@@ -61,15 +61,17 @@ void SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction)
 	 //error	
 	}
 }
-void SetPortDirection(PortType port,Port_ValType Val)
+
+void SetPortDirection(uint8 port,enum_PinValue_t Val)
 {
 	WRITE_REG_8BIT((port+GPIODIR),Val); 
 }
-void digitalWrite(Port_PinType Pin,Port_PinLevelType Val)
+
+void digitalWrite(enum_PinsNum_t Pin,enum_PinValue_t Val)
 {
 	if(Pin<8)                  //PORTA
 	{
-		if (Val==PORT_PIN_LEVEL_LOW)
+		if (Val==SET_VALUE_LOW)
 		{
 			CLEAR_BIT((BASE_A+GPIOOUTDATA),(Pin));
 		}
@@ -81,7 +83,7 @@ void digitalWrite(Port_PinType Pin,Port_PinLevelType Val)
 	else if((Pin<16)&&(Pin>=8)) //PORTB
 	{
 		Pin-=8;
-		if (Val==PORT_PIN_LEVEL_LOW)
+		if (Val==SET_VALUE_LOW)
 		{
 			CLEAR_BIT((BASE_B+GPIOOUTDATA),(Pin));
 		}
@@ -93,7 +95,7 @@ void digitalWrite(Port_PinType Pin,Port_PinLevelType Val)
 	else if ((Pin<24)&&(Pin>=16)) //PORTC
 	{
 		Pin-=16;
-		if (Val==PORT_PIN_LEVEL_LOW)
+		if (Val==SET_VALUE_LOW)
 		{
 			CLEAR_BIT((BASE_C+GPIOOUTDATA),(Pin));
 		}
@@ -105,7 +107,7 @@ void digitalWrite(Port_PinType Pin,Port_PinLevelType Val)
 	else if ((Pin<32)&&(Pin>=24)) //PORTD
 	{
 		Pin-=24;
-		if (Val==PORT_PIN_LEVEL_LOW)
+		if (Val==SET_VALUE_LOW)
 		{
 			CLEAR_BIT((BASE_D+GPIOOUTDATA),(Pin));
 		}
@@ -119,18 +121,19 @@ void digitalWrite(Port_PinType Pin,Port_PinLevelType Val)
 		//error
 	}
 }
-Port_PinLevelType digitalRead(Port_PinType Pin)
+
+enum_PinValue_t digitalRead(enum_PinsNum_t Pin)
 {
-	Port_PinLevelType ret_val=0;
+	enum_PinValue_t ret_val=SET_VALUE_LOW;
 	if(Pin<8)                     //PORTA
 	{
 		if (BIT_IS_SET(BASE_A+GPIOINDATA,Pin))
 		{
-			ret_val= PORT_PIN_LEVEL_HIGH;
+			ret_val= SET_VALUE_HIGH;
 		}
 		else
 		{
-			ret_val = PORT_PIN_LEVEL_LOW;
+			ret_val = SET_VALUE_LOW;
 		}
 	}
 	else if((Pin<16)&&(Pin>=8)) //PORTB
@@ -138,11 +141,11 @@ Port_PinLevelType digitalRead(Port_PinType Pin)
 		Pin-=8;
 		if (BIT_IS_SET(BASE_B+GPIOINDATA,Pin))
 		{
-			ret_val= PORT_PIN_LEVEL_HIGH;
+			ret_val= SET_VALUE_HIGH;
 		}
 		else
 		{
-			ret_val = PORT_PIN_LEVEL_LOW;
+			ret_val = SET_VALUE_LOW;
 		}
 	}
 	else if ((Pin<24)&&(Pin>=16)) //PORTC
@@ -150,11 +153,11 @@ Port_PinLevelType digitalRead(Port_PinType Pin)
 		Pin-=16;
 		if (BIT_IS_SET(BASE_C+GPIOINDATA,Pin))
 		{
-			ret_val= PORT_PIN_LEVEL_HIGH;
+			ret_val= SET_VALUE_HIGH;
 		}
 		else
 		{
-			ret_val = PORT_PIN_LEVEL_LOW;
+			ret_val = SET_VALUE_LOW;
 		}
 	}
 	else if ((Pin<32)&&(Pin>=24)) //PORTD
@@ -162,11 +165,11 @@ Port_PinLevelType digitalRead(Port_PinType Pin)
 		Pin-=24;
 		if (BIT_IS_SET(BASE_D+GPIOINDATA,Pin))
 		{
-			ret_val= PORT_PIN_LEVEL_HIGH;
+			ret_val= SET_VALUE_HIGH;
 		}
 		else
 		{
-			ret_val = PORT_PIN_LEVEL_LOW;
+			ret_val = SET_VALUE_LOW;
 		}
 	}
 	else
@@ -175,32 +178,55 @@ Port_PinLevelType digitalRead(Port_PinType Pin)
 	}
 	return ret_val;
 }
-void Port_Write(PortType port,Port_ValType Val)
+
+void Port_Write(uint8 port,enum_PinValue_t Val)
 {
 	WRITE_REG_8BIT((port+GPIOOUTDATA),Val);
 }
-Port_ValType Port_Read(PortType port)
+
+enum_PinValue_t Port_Read(uint8 port)
 {
 	return READ_REG_8BIT((port+GPIOINDATA));	
 }
 
 void gpio_spi_cng_master()
 {
-	SetPinDirection(B4,PORT_PIN_OUT);    //SS
-	SetPinDirection(B5,PORT_PIN_OUT);    //MOSi
-	SetPinDirection(B6,PORT_PIN_IN);	 //MISO
-	SetPinDirection(B7,PORT_PIN_OUT);	 //SCK
+	SetPinDirection(B4,SET_PIN_OUT);    //SS
+	SetPinDirection(B5,SET_PIN_OUT);    //MOSi
+	SetPinDirection(B6,SET_PIN_IN);	 //MISO
+	SetPinDirection(B7,SET_PIN_OUT);	 //SCK
 }
 
 void gpio_spi_cng_slave()
 {
-	SetPinDirection(B4,PORT_PIN_IN);	 //SS
-	SetPinDirection(B5,PORT_PIN_IN);	 //MOSI
-	SetPinDirection(B6,PORT_PIN_OUT);    //MISO
-	SetPinDirection(B7,PORT_PIN_IN);     //SCK
+	SetPinDirection(B4,SET_PIN_IN);	 //SS
+	SetPinDirection(B5,SET_PIN_IN);	 //MOSI
+	SetPinDirection(B6,SET_PIN_OUT);    //MISO
+	SetPinDirection(B7,SET_PIN_IN);     //SCK
 }
+
 void gpio_uart_cng()
 {
-	SetPinDirection(D0,PORT_PIN_IN); // uart RX
-	SetPinDirection(D1,PORT_PIN_OUT); // uart TX
+	SetPinDirection(D0,SET_PIN_IN); // uart RX
+	SetPinDirection(D1,SET_PIN_OUT); // uart TX
 }
+
+void BunchPins_Write(uint8* arr,uint8 N,enum_PinValue_t type)
+{
+	uint8 i;
+	for (i=0;i<N;i++)
+	{
+		digitalWrite(arr[i],type);
+	}
+}
+
+/*
+void Bunch_pinRead(str_Pin_Id_t* ptr_arr,ecore_u8 N,ecore_u8* ptr_buffer_arr)
+{
+	uint8 i;
+	for (i=0;i<N;i++)
+	{
+		ptr_buffer_arr[i]=pin_read(&ptr_arr[i]);
+	}
+}
+*/

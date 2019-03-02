@@ -2,58 +2,64 @@
  * GPIO.h
  *
  *  Created on: 7/30/2018
- *      Author: Ahmed Yusri Mohammed
+ *      Author: Ebrahim hamouda
  */
 
 #ifndef HAL_GPIO_H_
 #define HAL_GPIO_H_
 
-#include "hw_gpio.h"
 #include <common/ebra_common.h>
+#include "hw_gpio.h"
 
 
-typedef uint8 Port_PinType;
-typedef uint8 PortType;
-typedef uint8 Port_ValType;
+typedef enum{			// to set values of logic level
+	SET_VALUE_LOW,
+	SET_VALUE_HIGH,
+} enum_PinValue_t;
 
-#define A	 BASE_A
-#define B	 BASE_B
-#define C	 BASE_C
-#define D	 BASE_D
+typedef enum{      // to set dirication 
+	SET_PIN_IN,
+	SET_PIN_OUT,
+}  enum_PinDirection_t;
+
+typedef enum{   // to set the base address it confg from hw-gpio
+	//can be added more if there's
+	A = BASE_A,
+	B = BASE_B,
+	C = BASE_C,
+	D = BASE_D,
+} enum_PortName_t;
 
 
-typedef enum{
-	PORT_PIN_IN,
-	PORT_PIN_OUT,
-}Port_PinDirectionType;
+// to set single pin dirction
+void SetPinDirection(enum_PinsNum_t Pin,enum_PinDirection_t Direction);
 
-typedef enum{
-	PORT_PIN_LEVEL_LOW = 0,
-	PORT_PIN_LEVEL_HIGH = 1,
-}Port_PinLevelType;
+//to set whole port dirction 
+void SetPortDirection(uint8 port,uint8 Val);
 
-/**********************************
->>>>>>>For error detection.<<<<<<<<
-**********************************/
-typedef enum{
-    PORT_PIN_NOT_EXIST,
-	PASS,
-}gGPIOError_t;
+//to write to single pin value
+void digitalWrite(enum_PinsNum_t Pin,enum_PinValue_t Val);
 
-void SetPinDirection(Port_PinType Pin,Port_PinDirectionType Direction);
+//to read from single pin value
+enum_PinValue_t digitalRead(enum_PinsNum_t Pin);
 
-void SetPortDirection(PortType port,Port_ValType Val);
+//to write to whole port values
+void Port_Write(uint8 port,enum_PinValue_t Val);
 
-void digitalWrite(Port_PinType Pin,Port_PinLevelType Val);
+//to read the whole port values
+enum_PinValue_t Port_Read(uint8 port);
 
-Port_PinLevelType digitalRead(Port_PinType Pin);
+//to write to multi-different pin in different ports
+void BunchPins_Write(uint8* arr,uint8 N,enum_PinValue_t type);
 
-void Port_Write(PortType port,Port_ValType Val);
+//to read to multi-different pin in different ports
+void BunchPins_Read(uint8* arr_Input,uint8 arr_Output,uint8 Num);
 
-Port_ValType Port_Read(PortType port);
-
+//confg spi to be master
 void gpio_spi_cng_master();
+//confg spi to be slave 
 void gpio_spi_cng_slave();
+//confg the uart to TX & RX
 void gpio_uart_cng();
 
 #endif /* HAL_GPIO_H_ */
