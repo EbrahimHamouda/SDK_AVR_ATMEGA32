@@ -34,7 +34,8 @@ void adc_init(Vref_SelectType vref,Mode_SelectType mode,Clk_SelectType clk)
 
 uint16 adc_read(Channel_SelectType channel)
 {
-	ACCESS_REG_8BIT((ADCMUX+ADCBASE)) |= (channel<<0);				// set channel
+	ACCESS_REG_8BIT((ADCMUX+ADCBASE)) &= ~0x1f;              // clear channels value
+	ACCESS_REG_8BIT((ADCMUX+ADCBASE)) |= channel;				// set channel
 	SET_BIT((ADCCON+ADCBASE),6);									// start conversion for one shoot
 	while(ADC_BUSY);											    // stay here while adc is busy
 	return  V_IN;

@@ -5,7 +5,7 @@
 *  Author: EbrahimHamouda
 */
 #include "avr/interrupt.h"
-#include "C:\Users\ebrah\Desktop\test_comm-stack0\comm_stack\channels\spi\SPI.h"
+#include "SPI.h"
 
 #define SPI_BUSY BIT_IS_CLEAR((SPI_BASE+SPISTATUSREG),SPIINTERRUPTFLAG)
 #define dummy_data 0x52
@@ -36,20 +36,21 @@ void spi_InterruptDisable()
 
 uint8 spi_ExchangeData(uint8 data)
 {  // check if slave it will be stucked here 
-	/*WRITE_REG_8BIT((SPI_BASE+SPIDATAREG),data);*/
+	WRITE_REG_8BIT((SPI_BASE+SPIDATAREG),data);
 	while (SPI_BUSY);
 	return READ_REG_8BIT((SPI_BASE+SPIDATAREG));
 }
 
 uint8 spi_Rx()
 {
+ 	while (SPI_BUSY);
 	return READ_REG_8BIT((SPI_BASE+SPIDATAREG));
 }
 
 void spi_Tx(uint8 data)
 {
 	WRITE_REG_8BIT((SPI_BASE+SPIDATAREG),data);
-	//while (SPI_BUSY);
+	while (SPI_BUSY);
 }
 
 void Spi_AssignCallBack(void(*ptr_CallBackFun)(uint8))

@@ -8,7 +8,7 @@
 
 #ifndef ADC_H_
 #define ADC_H_
-#include "ebra_common.h"
+#include "C:\Users\ebrah\Desktop\ebra_common.h"
 #include "HW_ADC.h"
 
 typedef enum

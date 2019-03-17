@@ -47,7 +47,7 @@ enum_PinValue_t digitalRead(enum_PinsNum_t Pin);
 void Port_Write(uint8 port,enum_PinValue_t Val);
 
 //to read the whole port values
-enum_PinValue_t Port_Read(uint8 port);
+uint8 Port_Read(uint8 port);
 
 //to write to multi-different pin in different ports
 void BunchPins_Write(uint8* arr,uint8 N,enum_PinValue_t type);

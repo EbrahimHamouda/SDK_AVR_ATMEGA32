@@ -191,9 +191,9 @@ enum_PinValue_t Port_Read(uint8 port)
 
 void gpio_spi_cng_master()
 {
-	SetPinDirection(B4,SET_PIN_OUT);    //SS
-	SetPinDirection(B5,SET_PIN_OUT);    //MOSi
-	SetPinDirection(B6,SET_PIN_IN);	 //MISO
+	SetPinDirection(B4,SET_PIN_OUT);     //SS
+	SetPinDirection(B5,SET_PIN_OUT);     //MOSi
+	SetPinDirection(B6,SET_PIN_IN);		 //MISO
 	SetPinDirection(B7,SET_PIN_OUT);	 //SCK
 }
 

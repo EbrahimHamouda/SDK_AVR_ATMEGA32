@@ -2,7 +2,7 @@
 * USART.h
 *
 *  Created on: Aug 1, 2018
-*      Author: mh-sh
+*      Author: Ebrahim hamouda
 */
 
 #ifndef HAL_UART_USART_H_

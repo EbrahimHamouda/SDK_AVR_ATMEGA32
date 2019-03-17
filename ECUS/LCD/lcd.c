@@ -81,7 +81,7 @@ void lcd_cmd(const struct_PinsCnfg_t* ptr,uint8 cmd)
 	kick(ptr,cmd>>4);
 	kick(ptr,(cmd));
 	#endif
-	_delay_ms(50);
+	_delay_ms(2);
 }
 
 void lcd_chr(const struct_PinsCnfg_t* ptr,uint8 chr)
@@ -100,7 +100,7 @@ void lcd_chr(const struct_PinsCnfg_t* ptr,uint8 chr)
 	kick(ptr,chr>>4);
 	kick(ptr,(chr));
 	#endif
-	_delay_ms(50);
+	_delay_ms(1);
 }
 
 void lcd_clear(const struct_PinsCnfg_t* ptr)

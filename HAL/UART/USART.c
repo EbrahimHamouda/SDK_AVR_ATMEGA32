@@ -5,7 +5,7 @@
 *      Author: ebrahim
 */
 
-#include "C:\Users\ebrah\Desktop\test_comm-stack0\comm_stack\channels\uart\USART.h"
+#include "USART.h"
 #include <avr/interrupt.h>
 
 static void (*ptr_CallBackfnUartTx)();
