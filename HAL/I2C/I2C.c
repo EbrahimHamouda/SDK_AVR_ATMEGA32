@@ -59,7 +59,6 @@ void I2C_Stop(void)
 	 * Enable TWI Module TWEN=1 
 	 */
     TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
-
 }
 
 void I2C_Write(unsigned char data)
@@ -151,3 +150,4 @@ void i2c_disable_interrupt()
 {
 	TWCR &= ~(1<<0); // disable interrupt 
 }
+

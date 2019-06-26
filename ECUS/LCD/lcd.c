@@ -61,7 +61,7 @@ void lcd_init(const struct_PinsCnfg_t* ptr)
 	
 	lcd_cmd(ptr,ENTRY_MODE);                          // init lcd to use
 	lcd_goto(ptr,0, 0);
-	lcd_cmd(ptr,CURSOR_BLINK);
+	lcd_cmd(ptr,CURSOR_OFF);
 	lcd_clear(ptr);
 }
 
@@ -143,7 +143,7 @@ void lcd_str(const struct_PinsCnfg_t* ptr_lcd,uint8 row, uint8 col,uint8* ptr_ch
 		{
 			lcd_goto(ptr_lcd,++row,0);
 			ptr_chr++;
-			continue;
+			continue; // SKIP priniting '*'
 		}
 		lcd_chr(ptr_lcd,*ptr_chr);
 		ptr_chr++;

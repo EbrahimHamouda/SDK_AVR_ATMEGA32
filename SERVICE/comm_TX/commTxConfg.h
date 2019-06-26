@@ -17,9 +17,9 @@
 * to do future "features"
 */
 
-#define _SPI0_CHANNEL_
+/*#define _SPI0_CHANNEL_*/
 #define _UART0_CHANNEL_
-#define _I2C0_CHANNEL_
+// #define _I2C0_CHANNEL_
 
 #include "C:\Users\ebrah\Desktop\test_comm-stack0\comm_stack\channels\i2c\I2C.h"
 #include "C:\Users\ebrah\Desktop\test_comm-stack0\comm_stack\channels\spi\SPI.h"

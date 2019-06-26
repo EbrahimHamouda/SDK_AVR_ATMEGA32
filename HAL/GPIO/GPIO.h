@@ -30,6 +30,7 @@ typedef enum{   // to set the base address it confg from hw-gpio
 	D = BASE_D,
 } enum_PortName_t;
 
+void gpio_uart_cng();
 
 // to set single pin dirction
 void SetPinDirection(enum_PinsNum_t Pin,enum_PinDirection_t Direction);
@@ -60,6 +61,5 @@ void gpio_spi_cng_master();
 //confg spi to be slave 
 void gpio_spi_cng_slave();
 //confg the uart to TX & RX
-void gpio_uart_cng();
 
 #endif /* HAL_GPIO_H_ */

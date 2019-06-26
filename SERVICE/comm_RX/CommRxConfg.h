@@ -19,8 +19,7 @@
 
 */
 #define _UART0_
-#define _SPIO_
-#define _I2C0_
+
 #define MAX__SIZE 1000  // the message will be MAX__SIZE-1 and confirmation letter
 #include "C:\Users\ebrah\Desktop\test_comm-stack0\comm_stack\channels\i2c\I2C.h"
 #include "C:\Users\ebrah\Desktop\test_comm-stack0\comm_stack\channels\spi\SPI.h"
